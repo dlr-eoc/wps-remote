@@ -57,12 +57,12 @@ class ResourceMonitor(threading.Thread):
                     path     = process.cwd()
                     cmdline  = ' '.join(process.cmdline())
 
-                    print("Get the process info using (path, name, cmdline): [%s / %s / %s]" % (path, name, cmdline))
+                    print("Get the process info using (path, name, cmdline): [%s = %s = %s]" % (path, name, cmdline))
+                    print("Get the process status: [%s]" % (status))
                     for _p in proc_defs:
                         # logger.info("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
                         # print("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
-                        if (status.lower() != "sleeping") and \
-                            ('name' in _p and _p['name'] in name) and \
+                        if ('name' in _p and _p['name'] in name) and \
                                 ('cwd' in _p and _p['cwd'] in path) and \
                                     ('cmdline' in _p and _p['cmdline'] in cmdline):
                             return True
