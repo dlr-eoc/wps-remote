@@ -43,27 +43,28 @@ class ResourceMonitor(threading.Thread):
             try:
                 process = psutil.Process(proc.pid) # Get the process info using PID
                 if process.is_running():
-                    pid    = str(process.pid)
-                    ppid   = str(process.ppid)
-                    status = process.status()
+                    #pid    = str(process.pid)
+                    #ppid   = str(process.ppid)
+                    procDict = process.as_dict()
+                    status = procDict["status"]
 
-                    cpu_percent = process.cpu_percent()
-                    mem_percent = process.memory_percent()
+                    #cpu_percent = process.cpu_percent()
+                    #mem_percent = process.memory_percent()
 
-                    rss = str(process.memory_info().rss)
-                    vms = str(process.memory_info().vms)
-                    username = process.username()
-                    name     = process.name() # Here is the process name
-                    path     = process.cwd()
-                    cmdline  = ' '.join(process.cmdline())
+                    #rss = str(process.memory_info().rss)
+                    #vms = str(process.memory_info().vms)
+                    #username = process.username()
+                    name     = procDict["name"] # Here is the process name
+                    path     = procDict["cwd"]
+                    cmdline  = ' '.join(procDict["cmdline"])
 
                     print("Get the process info using (path, name, cmdline): [%s = %s = %s]" % (path, name, cmdline))
                     print("Get the process status: [%s]" % (status))
                     for _p in proc_defs:
-                        # logger.info("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
-                        # print("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
+                        logger.info("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
+                        print("Look for process: [%s] / Status [%s]" % (_p, status.lower()))
                         if ('name' in _p and _p['name'] in name) and \
-                                ('cwd' in _p and _p['cwd'] in path) and \
+                                (path != None and ('cwd' in _p and _p['cwd'] in path) or path == None) and \
                                     ('cmdline' in _p and _p['cmdline'] in cmdline):
                             return True
             except:
